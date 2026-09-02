@@ -12,6 +12,11 @@ so is a table. What matters is that a reader can tell what things exist in your 
 *For each significant one: actor, goal, preconditions, main flow, alternative flows,
 exceptions, postconditions. The exceptions are where the thinking is.*
 
-## Non-functional requirements
-*Performance, dependability, security, privacy. Give numbers where you can — an untestable
-non-functional requirement is a wish.*
+## Quality requirements
+*Performance, dependability, security, privacy, usability. Sometimes called non-functional
+requirements — you will meet that name elsewhere, and it means the same thing.*
+
+*Give numbers wherever you can. "The application should be fast" is not a requirement, it is
+a hope; "a list of 100 tasks loads in under one second on the target device" is something you
+can test and therefore something you can be held to. An untestable quality requirement is a
+wish.*
