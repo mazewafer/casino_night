@@ -30,16 +30,26 @@ half the time you think you do.
 
 ## Deliverables and marks
 
-The project is worth 45% of the course. Within it:
+The project is worth **45% of the course**. The course outline assesses it as three
+components. The marks below are given in **course percentage points**, not as percentages of
+the project, so they add to 45 and you can check them directly against the outline.
 
-| % | Deliverable | Where |
+| Course % | Component | Where |
 |---|---|---|
-| 10 | **Project charter** | docs/charter.md |
-| 15 | **Product and sprint backlogs** | GitLab issue boards |
-| 25 | **Source code and build** | src/, tests/, tagged v1.0 |
-| 20 | **Tests and test report** | tests/, docs/test_report.md |
-| 20 | **Sprint reviews** (three rounds, marked per member) | live |
-| 10 | **Progress and git hygiene** | commits, issues, boards, role rotation |
+| 5 | **Charter and backlogs** | docs/charter.md, GitLab issue boards |
+| 10 | **Presentation and review sessions** — three rounds, marked per member | live, in the lab slot |
+| 30 | **Software, tests and documentation** | src/, tests/, docs/, tagged `v1.0` |
+| **45** | | |
+
+Inside the 30, expect the weight to fall roughly like this: **source code and build 12**,
+**tests and test report 10**, **documentation 4**, and **progress and git hygiene 4** —
+commits, issues, boards, role rotation. That is guidance on where to spend your effort, not a
+second rubric; the marking rubric issued later in the term is what a TA will actually use.
+
+Two things to notice. The charter and backlogs are worth 5 points, not because they do not
+matter — they set up everything else — but because they are cheap to produce well and the
+marks are in the software. And the review sessions are marked **per member**, so 10 of your
+45 depend on your own answers about your own work, not on your team's.
 
 Note what is **not** on this list, deliberately: there is no separate user manual (put setup
 and usage in your README), no presentation deck (the live review is the presentation), and
