@@ -1,3 +1,15 @@
+<!-- STAFF: read this before committing anything here.
+
+     This project's visibility is INTERNAL. Every authenticated account on
+     git.uwaterloo.ca can read it -- the whole university, not only SE 101.
+
+     That is deliberate: it is how 131 students fetch this upstream with no membership
+     administration, and how tutors read the material without being granted anything.
+
+     It also means NOTHING here is course-private. No solutions, no marking schemes, no
+     rubrics, no quiz material, no student names or marks. Those belong in lab-solutions,
+     which is private.
+-->
 # SE 101 Team Project — Fall 2026
 
 This project is the **upstream** for every team repository. Your team fetches it once, in
