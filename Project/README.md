@@ -100,4 +100,4 @@ and says nothing until December is the one failure mode we cannot help with.
 
 ## Deadlines
 
-All dates are in the SE 101 Deadlines document on Learn.
+All dates are in **Part 3 of the SE 101 Course Handbook** on Learn.
