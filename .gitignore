@@ -1,0 +1,30 @@
+# Credentials — never in the repository. Each member keeps their own database login in
+# environment variables or in a .env file, which this line keeps out of git.
+.env
+.env.*
+*.token
+# The one deliberate exception is the course staff's read-only account in
+# Project/docs/db-connection.md (Lab 5, Step 1b) — read-only, coursework data, disposable.
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Android Studio
+.gradle/
+.idea/
+local.properties
+*.iml
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Operating systems and editors
+.DS_Store
+Thumbs.db
+.vscode/

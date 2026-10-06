@@ -7,7 +7,8 @@ using Scrum, in GitLab, over four sprints.
 
 1. **A web-accessible To-Do application.** Evolve the warm-up from Lab 5 into something
    genuinely usable by someone who is not you.
-2. **An Android To-Do application.** Every team has at least one member with a device.
+2. **An Android To-Do application.** It can be built and tested entirely on the Android
+   emulator; a phone helps for the demo but is not required. See the handbook, §2.6.
 3. **Something you propose.** It must be comparable in scope, and it must be approved
    through your charter before you start. Ambitious proposals are welcome; the failure mode
    is over-reach, so be honest about scope.
