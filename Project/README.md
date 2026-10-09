@@ -72,6 +72,12 @@ against GitLab metadata across the whole project, not just the warm-up.
 sprint::. The board is expected to be *live* — reflecting what is actually happening, not
 reconstructed the night before a review.
 
+**AI use is disclosed in each merge request**, exactly as in Lab 5: the description says who
+did what, plus one line on generative-AI use from each member who worked on it --- what for, what
+it produced, what you checked or changed --- or "none". The template is in Step 3 of the Lab 5
+README, and handbook §5.7 says what a specific line contains. There is no separate AI log for the
+project. At the sprint reviews you may be asked about your own lines.
+
 **Definition of done.** Agree one, write it in the charter, and hold to it. "Merged with
 tests passing and reviewed by someone who did not write it" is a reasonable starting point.
 
