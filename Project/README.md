@@ -54,7 +54,7 @@ marks are in the software. And the review sessions are marked **per member**, so
 
 Note what is **not** on this list, deliberately: there is no separate user manual (put setup
 and usage in your README), no presentation deck (the live review is the presentation), and
-no per-sprint retrospective document (one issue comment per sprint is enough). The time
+no retrospective document (a short issue per sprint is enough; see Working rules). The time
 that would have gone into those should go into working software.
 
 ### A note on the sprint review mark
@@ -71,6 +71,13 @@ against GitLab metadata across the whole project, not just the warm-up.
 **Labels.** Every issue carries type::, priority::, severity::, and once sprints begin,
 sprint::. The board is expected to be *live* — reflecting what is actually happening, not
 reconstructed the night before a review.
+
+**Retrospectives.** At the end of each sprint, open an issue titled "Sprint N retrospective",
+labelled sprint::N (it needs no other labels), and write five short lines in it: what went
+well; what did not; the one thing you will change next sprint; velocity (points planned,
+points done); and whether last sprint's change actually happened. Write it the day of the
+review, not later, then close the issue. Three honest sentences beat a page of process
+language.
 
 **AI use is disclosed in each merge request**, exactly as in Lab 5: the description says who
 did what, plus one line on generative-AI use from each member who worked on it --- what for, what
@@ -102,8 +109,8 @@ the thing that does not work would have worked.
 
 ## Getting help
 
-The clinic in the Friday seminar slot exists for this. So do the TAs. A team that is stuck
-and says nothing until December is the one failure mode we cannot help with.
+Ask in the Thursday lab slot, where the tutors are on the floor, or on Piazza. A team that is
+stuck and says nothing until December is the one failure mode we cannot help with.
 
 ## Deadlines
 

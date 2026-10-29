@@ -21,7 +21,7 @@ again.
 
     Project/
       README.md        what you are building and how it is marked
-      docs/            charter, requirements, test plan, test report, retrospectives
+      docs/            charter, requirements, test plan, test report
       src/             your code
       tests/           your tests
       build/           anything generated (optional)
@@ -30,6 +30,6 @@ Read Project/README.md as a team before you write anything.
 
 ## Deadlines
 
-All dates — charter, sprint reviews, final submission — are in the **SE 101 Deadlines
-document on Learn**. No date appears anywhere in this repository, so that there is exactly
+All dates — charter, sprint reviews, final submission — are in **Part 3 of the SE 101
+Course Handbook** on Learn. No date appears anywhere in this repository, so that there is exactly
 one place to look and exactly one place to change.
