@@ -65,9 +65,30 @@ cannot is a team with a problem, and the marks will say so.
 
 ## Working rules
 
-**Role rotation.** For each substantial piece of work: one member implements, a *different*
-member writes the tests, a *third* reviews the merge request. This is checked mechanically
-against GitLab metadata across the whole project, not just the warm-up.
+**Work rotation (implement, test, review).** For each substantial piece of work: one member
+implements, a *different* member writes the tests, a *third* reviews the merge request. This is
+checked mechanically against GitLab metadata across the whole project, not just the warm-up.
+
+**Scrum roles.** Each sprint, one member is **product owner** (orders the backlog, speaks for the
+user, accepts or rejects finished work) and a different member is **Scrum master** (runs sprint
+planning and the retrospective, chases whatever is blocking the team). Pass both roles on at the
+start of each sprint, so that over the four sprints **every member holds one of them at least
+once**. Nobody holds both in the same sprint. The product owner and Scrum master are still
+developers: they implement, test and review like everyone else. Record each sprint's holders in
+the charter's *Team and roles* table, and update it when the roles change.
+
+Four sprints and two roles make eight slots, so a team of five or six has room for everyone. One
+rotation that works, for members A to E:
+
+| Sprint | Product owner | Scrum master |
+|---|---|---|
+| 1 | A | B |
+| 2 | C | D |
+| 3 | E | A |
+| 4 | B | C |
+
+Everyone holds a role at least once, and A, B and C hold one of each. A team of six covers
+everyone in the first three sprints (A/B, C/D, E/F) and chooses freely for the fourth.
 
 **Labels.** Every issue carries type::, priority::, severity::. Once sprints begin, the issues
 the team takes into a sprint also carry sprint::N and an **estimate**, points::1, 2, 3, 5 or 8,
