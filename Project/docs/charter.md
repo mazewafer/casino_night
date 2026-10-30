@@ -34,12 +34,14 @@ that two members would agree in a disputed case. A reasonable starting point: me
 passing, reviewed and approved by someone who did not write it.*
 
 ## Team and roles
-| Member | GitLab userid | Role for Sprint 1 |
+| Member | GitLab userid | Role this sprint |
 |---|---|---|
 | | | |
 
-*Roles rotate. Product Owner speaks for the user, Scrum Master speaks for the process,
-developers speak for how much fits. Record who holds what now; you will update this.*
+*Product owner speaks for the user, Scrum master speaks for the process, and everyone --- the
+two of them included --- is a developer. Pass both roles on at the start of each sprint, so that
+everyone holds one of them at least once (see Working rules in `Project/README.md`). Update this
+table when the roles change, and note the sprint.*
 
 ## Assumptions
 *What you are taking for granted. "At least one member has a working Android device";
