@@ -69,8 +69,11 @@ cannot is a team with a problem, and the marks will say so.
 member writes the tests, a *third* reviews the merge request. This is checked mechanically
 against GitLab metadata across the whole project, not just the warm-up.
 
-**Labels.** Every issue carries type::, priority::, severity::, and once sprints begin,
-sprint::. The board is expected to be *live* — reflecting what is actually happening, not
+**Labels.** Every issue carries type::, priority::, severity::. Once sprints begin, the issues
+the team takes into a sprint also carry sprint::N and an **estimate**, points::1, 2, 3, 5 or 8,
+agreed by the team at sprint planning (lecture module 07). An issue bigger than 8 points is too
+big: split it. Velocity in the retrospective is the sum of the points on issues finished in the
+sprint. The board is expected to be *live* — reflecting what is actually happening, not
 reconstructed the night before a review.
 
 **Retrospectives.** At the end of each sprint, open an issue titled "Sprint N retrospective",

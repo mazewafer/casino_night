@@ -1,11 +1,11 @@
-# Project Charter — Team <NN>
+# Project Charter — Team [NN]
 
-*Replace every angle-bracketed prompt. Delete the italic guidance as you go. One page is
+*Replace every prompt in square brackets, including the team number. Delete the italic guidance as you go. One page is
 the target; two is the maximum. A charter that takes longer to read than to act on has
 failed at its job.*
 
 ## Project title
-<A name. It can be dull.>
+[A name. It can be dull.]
 
 ## Description
 *Two or three sentences. What is this, and who is it for? If a stranger read only this

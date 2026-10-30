@@ -1,4 +1,4 @@
-# Test Plan — Team <NN>
+# Test Plan — Team [NN]
 
 *Carried forward from Lab 4, now for a team codebase. Same structure, larger system.*
 

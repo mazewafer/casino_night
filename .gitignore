@@ -28,3 +28,6 @@ captures/
 .DS_Store
 Thumbs.db
 .vscode/
+
+# Obsidian vault settings (instructor's local editor)
+.obsidian/
