@@ -3,7 +3,7 @@
      This project's visibility is INTERNAL. Every authenticated account on
      git.uwaterloo.ca can read it -- the whole university, not only SE 101.
 
-     That is deliberate: it is how 131 students fetch this upstream with no membership
+     That is deliberate: it is how the SE 101 students fetch this upstream with no membership
      administration, and how tutors read the material without being granted anything.
 
      It also means NOTHING here is course-private. No solutions, no marking schemes, no
