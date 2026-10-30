@@ -45,7 +45,8 @@ the project, so they add to 45 and you can check them directly against the outli
 Inside the 30, expect the weight to fall roughly like this: **source code and build 12**,
 **tests and test report 10**, **documentation 4**, and **progress and git hygiene 4** —
 commits, issues, boards, role rotation. That is guidance on where to spend your effort, not a
-second rubric; the marking rubric issued later in the term is what a TA will actually use.
+rubric. Tutors mark against these weights using written marking guidance, applied the same way
+to every team.
 
 Two things to notice. The charter and backlogs are worth 5 points, not because they do not
 matter — they set up everything else — but because they are cheap to produce well and the
