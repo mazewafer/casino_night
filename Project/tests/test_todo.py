@@ -121,4 +121,18 @@ def test_add_existing_task():
         cursor.execute("DELETE FROM ToDoData WHERE item = %s", (item,))
         connection.commit()
     connection.close()
-    
+
+
+def test_add_empty_title_rejected():
+    task = {"item": "test-add-empty", "title": "  ", "start": date(2026, 11, 1),
+            "due": date(2026, 11, 5), "complete": None}
+    with pytest.raises(ValueError):
+        add(task)
+    # nothing should have been inserted
+    conn = connect()
+    try:
+        with conn.cursor() as cur:
+            cur.execute("SELECT item FROM ToDoData WHERE item = %s", ("test-add-empty",))
+            assert cur.fetchone() is None
+    finally:
+        conn.close()
