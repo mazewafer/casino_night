@@ -11,7 +11,7 @@ import sys
 import pytest, pymysql
 
 
-from src.todo import add, connect, delete, pick_tomorrow, tomorrow
+from src.todo import add, connect, delete, pick_tomorrow, today, tomorrow
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
@@ -376,3 +376,79 @@ def test_delete_missing_task_does_nothing():
     delete(_task(PREFIX + "missing"))   # should not raise
     assert _test_items() == {PREFIX + "a"}
 
+
+@needs_db
+def test_today_returns_correct_tasks():
+    item_today = "Today Test Task"
+    item_tomorrow = "Tomorrow Test Task"
+    tomorrow = date.today() + timedelta(days=1)
+    task_today = {
+        "item": item_today,
+        "title": "Work",
+        "start": date.today(),
+        "due": date.today(),
+        "complete": None
+    }
+    task_tomorrow = {
+        "item": item_tomorrow,
+        "title": "Work",
+        "start": date.today(),
+        "due": tomorrow,
+        "complete": None
+    }
+    try:
+        add(task_today)
+        add(task_tomorrow)
+
+        result = today()
+
+        assert any(row["item"] == item_today for row in result)
+        assert not any(row["item"] == item_tomorrow for row in result)
+
+    finally:
+        connection = connect()
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "DELETE FROM ToDoData WHERE item IN (%s, %s)",
+                (item_today, item_tomorrow)
+            )
+            connection.commit()
+        connection.close()
+
+@needs_db
+def test_today_skips_completed_tasks():
+    item_completed = "Today Test Completed Task"
+    item_pending = "Today Test Pending Task"
+    task_completed = {
+        "item": item_completed,
+        "title": "Work",
+        "start": date.today(),
+        "due": date.today(),
+        "complete": date.today()
+    }
+    task_pending = {
+        "item": item_pending,
+        "title": "Work",
+        "start": date.today(),
+        "due": date.today(),
+        "complete": None
+    }
+
+    try:
+        add(task_completed)
+        add(task_pending)
+
+        result = today()
+
+        assert any(row["item"] == item_pending for row in result)
+        assert not any(row["item"] == item_completed for row in result)
+
+    finally:
+        connection = connect()
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "DELETE FROM ToDoData WHERE item IN (%s, %s)",
+                (item_completed, item_pending)
+            )
+            connection.commit()
+        connection.close()
