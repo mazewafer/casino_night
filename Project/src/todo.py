@@ -59,11 +59,45 @@ def connect():
         raise
 
 
-def delete(task: dict) -> None:
-    logger.debug("delete called with task %s", task)
+def add(task: dict) -> None:
+    logger.debug("add called with task %s", task)
 
     if not task["title"].strip():
         raise ValueError("title cannot be empty")
+
+    connection = connect()
+
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                INSERT INTO ToDoData
+                (`item`, `title`, `start`, `due`, `complete`)
+                VALUES (%s, %s, %s, %s, %s)
+                """,
+                (
+                    task["item"],
+                    task["title"],
+                    task["start"],
+                    task["due"],
+                    task["complete"]
+                )
+            )
+
+        connection.commit()
+        logger.info("task %s added successfully", task["item"])
+
+    except pymysql.err.IntegrityError:
+        logger.error("Failed to insert task %s", task["item"])
+        raise ValueError("Could not add task due to a database constraint")
+
+    finally:
+        connection.close()
+        logger.debug("database connection closed")
+
+
+def delete(task: dict) -> None:
+    logger.debug("delete called with task %s", task)
 
     connection = connect()
 
