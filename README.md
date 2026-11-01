@@ -3,7 +3,7 @@
      This project's visibility is INTERNAL. Every authenticated account on
      git.uwaterloo.ca can read it -- the whole university, not only SE 101.
 
-     That is deliberate: it is how 131 students fetch this upstream with no membership
+     That is deliberate: it is how the SE 101 students fetch this upstream with no membership
      administration, and how tutors read the material without being granted anything.
 
      It also means NOTHING here is course-private. No solutions, no marking schemes, no
@@ -21,7 +21,7 @@ again.
 
     Project/
       README.md        what you are building and how it is marked
-      docs/            charter, requirements, test plan, test report, retrospectives
+      docs/            charter, requirements, test plan, test report
       src/             your code
       tests/           your tests
       build/           anything generated (optional)
@@ -30,6 +30,6 @@ Read Project/README.md as a team before you write anything.
 
 ## Deadlines
 
-All dates — charter, sprint reviews, final submission — are in the **SE 101 Deadlines
-document on Learn**. No date appears anywhere in this repository, so that there is exactly
+All dates — charter, sprint reviews, final submission — are in **Part 3 of the SE 101
+Course Handbook** on Learn. No date appears anywhere in this repository, so that there is exactly
 one place to look and exactly one place to change.
