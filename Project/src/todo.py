@@ -2,7 +2,8 @@ import os
 import sys
 import pymysql
 import logging
-from datetime import datetime, timedealta
+
+from datetime import date, timedelta
 
 
 logger = logging.getLogger(__name__)
@@ -57,3 +58,22 @@ def connect():
     except Exception:
         logger.exception("Database connection failed")
         raise
+
+
+def pick_tomorrow(tasks, today=None):
+    """Return the unfinished tasks in `tasks` that are due tomorrow."""
+    if today is None:
+        today = date.today()
+    tomorrow_date = today + timedelta(days=1)
+    return [t for t in tasks if t["complete"] is None and t["due"] == tomorrow_date]
+
+def tomorrow(today=None):
+    """Return the unfinished tasks due tomorrow, read from the database."""
+    conn = connect()
+    try:
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT item, title, start, due, complete FROM ToDoData")
+        rows = cursor.fetchall()
+    finally:
+        conn.close()
+    return pick_tomorrow(rows, today)
