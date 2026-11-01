@@ -2,7 +2,7 @@ import os
 import sys
 import pymysql
 import logging
-from datetime import datetime, timedealta
+from datetime import datetime, timedelta
 
 
 logger = logging.getLogger(__name__)
@@ -57,3 +57,32 @@ def connect():
     except Exception:
         logger.exception("Database connection failed")
         raise
+
+
+def delete(task: dict) -> None:
+    logger.debug("delete called with task %s", task)
+
+    connection = connect()
+
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("DELETE FROM ToDoData WHERE item=%s", (task["item"],))
+            if cursor.rowcount == 0:
+                logger.warning("No matching task found to delete")
+            else:
+                connection.commit()
+                logger.info("task %s deleted successfully", task["item"])
+
+    except pymysql.MySQLError:
+        connection.rollback()
+        logger.exception("Database error while deleting task")
+        raise
+
+    except Exception:
+        connection.rollback()
+        logger.exception("Failed to delete task %s", task["item"])
+        raise
+
+    finally:
+        connection.close()
+        logger.debug("database connection closed")
