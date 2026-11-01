@@ -107,7 +107,7 @@ def test_update_item_not_exist_raises_error():
 def test_update_info_not_change():
 
     task = {
-        "item": "test update 1",
+        "item": "test update 3",
         "title": "School",
         "start": "2026-10-01",
         "due": "2026-10-02",
@@ -130,7 +130,7 @@ def test_update_info_not_change():
 
         # Update task
         task_update = {
-            "item": "test update 1",
+            "item": "test update 3",
             "title": "School",
             "start": "2026-10-01",
             "due": "2026-10-02",
@@ -152,7 +152,7 @@ def test_update_info_not_change():
         assert result["title"] == task_update["title"]
         assert result["start"] == date(2026, 10, 1)
         assert result["due"] == date(2026, 10, 2)
-        assert result["complete"] == None
+        assert result["complete"] is None
 
     finally:
         # Clean up
