@@ -98,6 +98,62 @@ def add(task: dict) -> None:
         connection.close()
         logger.debug("database connection closed")
 
+def update(task: dict) -> None:
+        logger.debug("update called with item=%s", task["item"])
+        connection = connect()
+        try:
+                with connection.cursor() as cursor:
+                        cursor.execute("SELECT item FROM ToDoData WHERE item = %s", (task["item"],))
+                        if cursor.fetchone() is None:
+                                logger.warning("Attempted to update non-existent task: %s", task["item"])
+                                raise ValueError("Item doesn't exist")
+                        cursor.execute("UPDATE ToDoData SET title = %s, start = %s, due = %s, complete = %s WHERE item = %s", (task["title"], task["start"], task["due"], task["complete"], task["item"]))
+                connection.commit()
+                logger.info("Updated task: %s", task["item"])
+        except Exception:
+                connection.rollback()
+                raise
+        finally:
+                connection.close()
+                logger.debug("database connection closed")
+
+def today() -> list[dict]:
+    logger.debug("today called")
+
+    connection = connect()
+
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT *
+                FROM ToDoData
+                WHERE `due` = %s
+                AND `complete` IS NULL
+                ORDER BY `item` ASC
+                """,
+                (date.today(),)
+            )
+
+            tasks = cursor.fetchall()
+
+        if not tasks:
+            logger.warning("No unfinished tasks due today")
+            return []
+
+        # Convert dates to strings
+        for task in tasks:
+            for field in ("start", "due", "complete"):
+                if task[field] is not None:
+                    task[field] = task[field].isoformat()
+
+        logger.info("Found %d tasks due today", len(tasks))
+        return tasks
+
+    finally:
+        connection.close()
+        logger.debug("database connection closed")
+
 
 def delete(task: dict) -> None:
     logger.debug("delete called with task %s", task)
