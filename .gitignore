@@ -1,6 +1,7 @@
 # Credentials — never in the repository. Each member keeps their own database login in
 # environment variables or in a .env file, which this line keeps out of git.
 .env
+*.env
 .env.*
 *.token
 # The one deliberate exception is the course staff's read-only account in

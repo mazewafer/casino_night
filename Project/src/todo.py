@@ -1,60 +1,80 @@
 import os
 import sys
-from datetime import date, timedelta
 import pymysql
 import logging
 
+
+from datetime import date, timedelta
+
+
+
 logger = logging.getLogger(__name__)
 
-def connect(**extra):
+
+def connect():
     """Open a connection using credentials from the environment."""
+    logger.debug("connect called")
+
     missing = [name for name in
                ("SE101_DB_HOST", "SE101_DB_PORT", "SE101_DB_USER",
                 "SE101_DB_PASSWORD", "SE101_DB_NAME")
                if not os.environ.get(name)]
+
     if missing:
+        logger.error("Missing environment variables: %s", missing)
         sys.exit("Not set in the environment: " + ", ".join(missing))
- 
-    # A connection over the network must be encrypted, and TLS needs the CA
-    # certificate that proves the server is the one you think it is. A connection
-    # to a server on this machine travels over the loopback interface, which no
-    # other machine can see, so it does not.
+
+    # Remote connections require TLS encryption
     ca = os.environ.get("SE101_DB_CA")
+
     if ca:
+        if not os.path.isfile(ca):
+            logger.error("CA certificate not found: %s", ca)
+            sys.exit(f"CA certificate not found: {ca}")
         ssl_opts = {"ca": ca}
     elif os.environ["SE101_DB_HOST"] in ("localhost", "127.0.0.1", "::1"):
         ssl_opts = None
     else:
-        sys.exit("SE101_DB_CA is not set, and " + os.environ["SE101_DB_HOST"] +
-                 " is not this machine. A connection over the network must be "
-                 "encrypted: download ca.pem from the Aiven service page and set "
-                 "SE101_DB_CA to its full path.")
- 
-    return pymysql.connect(
-        host=os.environ["SE101_DB_HOST"],
-        port=int(os.environ["SE101_DB_PORT"]),
-        user=os.environ["SE101_DB_USER"],
-        password=os.environ["SE101_DB_PASSWORD"],
-        database=os.environ["SE101_DB_NAME"],
-        ssl=ssl_opts,
-        cursorclass=pymysql.cursors.DictCursor,
-        **extra,
-    )
+        sys.exit(
+            "SE101_DB_CA is not set, and "
+            + os.environ["SE101_DB_HOST"]
+            + " is not this machine. A connection over the network must be "
+            "encrypted: download ca.pem from the Aiven service page and set "
+            "SE101_DB_CA to its full path."
+        )
+
+    try:
+        connection = pymysql.connect(
+            host=os.environ["SE101_DB_HOST"],
+            port=int(os.environ["SE101_DB_PORT"]),
+            user=os.environ["SE101_DB_USER"],
+            password=os.environ["SE101_DB_PASSWORD"],
+            database=os.environ["SE101_DB_NAME"],
+            ssl=ssl_opts,
+            cursorclass=pymysql.cursors.DictCursor,
+        )
+
+        logger.info("Database connection established")
+        return connection
+
+    except Exception:
+        logger.exception("Database connection failed")
+        raise
 
 def earliest_pending(tasks):
     """Pick the unfinished task due soonest. No database in here.
  
-    Takes a list of (item, type, started, due, done) tuples. Returns None if
+    Takes a list of (item, title, start, due, complete) tuples. Returns None if
     nothing is pending. Ties on due are broken by the task that was started
     first, then by item, so the answer is the same every time.
     """
     logger.debug("earliest_pending called with %d tasks", len(tasks))
-    pending = [t for t in tasks if t[4] is None or t[4] == ""]
+    pending = [t for t in tasks if t["complete"] is None or t["complete"] == ""]
     if not pending:
-        logger.debug("No tasks due")
+        logger.debug("No pending tasks found")
         return None
-    earliest = min(pending, key=lambda t: (t[3], t[0], t[2]))
-    logger.debug("Earliest task is %s", earliest)
+    earliest = min(pending, key=lambda t: (t["due"], t["item"], t["start"]))
+    logger.debug("Earliest pending task is %s", earliest["item"])
     return earliest
 
 def next():
@@ -63,17 +83,149 @@ def next():
     connection = connect()
     try:
         with connection.cursor() as cursor:
-            cursor.execute("SELECT item, type, started, due, done FROM ToDoData")
+            cursor.execute("SELECT item, title, start, due, complete FROM ToDoData")
             rows = cursor.fetchall()
     finally:
         connection.close()
-    # The database returns NULL as None, which is what a tuple's done uses too,
-    # so the values pass through unchanged.
-    tasks = [(r["item"], r["type"], r["started"], r["due"], r["done"])
-             for r in rows]
-    result = earliest_pending(tasks)
-    if result == None:
-        logger.debug("No tasks due")
-    else:
-        logger.debug("Earliest task is %s", result)
-    return result
+    return earliest_pending(rows)
+        
+
+
+def add(task: dict) -> None:
+    logger.debug("add called with task %s", task)
+
+    if not task["title"].strip():
+        raise ValueError("title cannot be empty")
+
+    connection = connect()
+
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                INSERT INTO ToDoData
+                (`item`, `title`, `start`, `due`, `complete`)
+                VALUES (%s, %s, %s, %s, %s)
+                """,
+                (
+                    task["item"],
+                    task["title"],
+                    task["start"],
+                    task["due"],
+                    task["complete"]
+                )
+            )
+
+        connection.commit()
+        logger.info("task %s added successfully", task["item"])
+
+    except pymysql.err.IntegrityError:
+        logger.error("Failed to insert task %s", task["item"])
+        raise ValueError("Could not add task due to a database constraint")
+
+    finally:
+        connection.close()
+        logger.debug("database connection closed")
+
+def update(task: dict) -> None:
+        logger.debug("update called with item=%s", task["item"])
+        connection = connect()
+        try:
+                with connection.cursor() as cursor:
+                        cursor.execute("SELECT item FROM ToDoData WHERE item = %s", (task["item"],))
+                        if cursor.fetchone() is None:
+                                logger.warning("Attempted to update non-existent task: %s", task["item"])
+                                raise ValueError("Item doesn't exist")
+                        cursor.execute("UPDATE ToDoData SET title = %s, start = %s, due = %s, complete = %s WHERE item = %s", (task["title"], task["start"], task["due"], task["complete"], task["item"]))
+                connection.commit()
+                logger.info("Updated task: %s", task["item"])
+        except Exception:
+                connection.rollback()
+                raise
+        finally:
+                connection.close()
+                logger.debug("database connection closed")
+
+def today() -> list[dict]:
+    logger.debug("today called")
+
+    connection = connect()
+
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT *
+                FROM ToDoData
+                WHERE `due` = %s
+                AND `complete` IS NULL
+                ORDER BY `item` ASC
+                """,
+                (date.today(),)
+            )
+
+            tasks = cursor.fetchall()
+
+        if not tasks:
+            logger.warning("No unfinished tasks due today")
+            return []
+
+        # Convert dates to strings
+        for task in tasks:
+            for field in ("start", "due", "complete"):
+                if task[field] is not None:
+                    task[field] = task[field].isoformat()
+
+        logger.info("Found %d tasks due today", len(tasks))
+        return tasks
+
+    finally:
+        connection.close()
+        logger.debug("database connection closed")
+
+
+def delete(task: dict) -> None:
+    logger.debug("delete called with task %s", task)
+
+    connection = connect()
+
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("DELETE FROM ToDoData WHERE item=%s", (task["item"],))
+            if cursor.rowcount == 0:
+                logger.warning("No matching task found to delete")
+            else:
+                connection.commit()
+                logger.info("task %s deleted successfully", task["item"])
+
+    except pymysql.MySQLError:
+        connection.rollback()
+        logger.exception("Database error while deleting task")
+        raise
+
+    except Exception:
+        connection.rollback()
+        logger.exception("Failed to delete task %s", task["item"])
+        raise
+
+    finally:
+        connection.close()
+        logger.debug("database connection closed")
+        
+def pick_tomorrow(tasks, today=None):
+    """Return the unfinished tasks in `tasks` that are due tomorrow."""
+    if today is None:
+        today = date.today()
+    tomorrow_date = today + timedelta(days=1)
+    return [t for t in tasks if t["complete"] is None and t["due"] == tomorrow_date]
+
+def tomorrow(today=None):
+    """Return the unfinished tasks due tomorrow, read from the database."""
+    conn = connect()
+    try:
+        cursor = conn.cursor()
+        cursor.execute("SELECT item, title, start, due, complete FROM ToDoData")
+        rows = cursor.fetchall()
+    finally:
+        conn.close()
+    return pick_tomorrow(rows, today)
