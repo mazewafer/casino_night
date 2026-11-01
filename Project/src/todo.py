@@ -1,6 +1,3 @@
-import logging
-from src.todo import connect
-logger = logging.getLogger(__name__)
 
 def update(task: dict) -> None:
         logger.debug("update called with item=%s", task["item"])
