@@ -2,7 +2,9 @@ import os
 import sys
 from datetime import date, timedelta
 import pymysql
+import logging
 
+logger = logging.getLogger(__name__)
 
 def connect(**extra):
     """Open a connection using credentials from the environment."""
@@ -46,13 +48,18 @@ def earliest_pending(tasks):
     nothing is pending. Ties on due are broken by the task that was started
     first, then by item, so the answer is the same every time.
     """
+    logger.debug("earliest_pending called with %d tasks", len(tasks))
     pending = [t for t in tasks if t[4] is None or t[4] == ""]
     if not pending:
+        logger.debug("No tasks due")
         return None
-    return min(pending, key=lambda t: (t[3], t[0], t[2]))
+    earliest = min(pending, key=lambda t: (t[3], t[0], t[2]))
+    logger.debug("Earliest task is %s", earliest)
+    return earliest
 
 def next():
     """Fetch every task from the database and hand them to earliest_pending."""
+    logger.debug("next called")
     connection = connect()
     try:
         with connection.cursor() as cursor:
@@ -64,4 +71,9 @@ def next():
     # so the values pass through unchanged.
     tasks = [(r["item"], r["type"], r["started"], r["due"], r["done"])
              for r in rows]
-    return earliest_pending(tasks)
+    result = earliest_pending(tasks)
+    if result == None:
+        logger.debug("No tasks due")
+    else:
+        logger.debug("Earliest task is %s", result)
+    return result
