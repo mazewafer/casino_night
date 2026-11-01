@@ -62,6 +62,9 @@ def connect():
 def delete(task: dict) -> None:
     logger.debug("delete called with task %s", task)
 
+    if not task["title"].strip():
+        raise ValueError("title cannot be empty")
+
     connection = connect()
 
     try:
