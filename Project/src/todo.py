@@ -2,7 +2,7 @@ import os
 import sys
 import pymysql
 import logging
-from datetime import datetime, timedealta
+from datetime import datetime, timedelta
 
 
 logger = logging.getLogger(__name__)
