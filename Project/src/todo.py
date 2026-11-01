@@ -2,6 +2,8 @@ import os
 import sys
 import pymysql
 import logging
+from datetime import datetime, timedelta
+
 
 logger = logging.getLogger(__name__)
 
@@ -57,8 +59,8 @@ def connect():
         raise
 
 
-def add(task: dict) -> None:
-    logger.debug("add called with task %s", task)
+def delete(task: dict) -> None:
+    logger.debug("delete called with task %s", task)
 
     if not task["title"].strip():
         raise ValueError("title cannot be empty")
@@ -67,27 +69,22 @@ def add(task: dict) -> None:
 
     try:
         with connection.cursor() as cursor:
-            cursor.execute(
-                """
-                INSERT INTO ToDoData
-                (`item`, `title`, `start`, `due`, `complete`)
-                VALUES (%s, %s, %s, %s, %s)
-                """,
-                (
-                    task["item"],
-                    task["title"],
-                    task["start"],
-                    task["due"],
-                    task["complete"]
-                )
-            )
+            cursor.execute("DELETE FROM ToDoData WHERE item=%s", (task["item"],))
+            if cursor.rowcount == 0:
+                logger.warning("No matching task found to delete")
+            else:
+                connection.commit()
+                logger.info("task %s deleted successfully", task["item"])
 
-        connection.commit()
-        logger.info("task %s added successfully", task["item"])
+    except pymysql.MySQLError:
+        connection.rollback()
+        logger.exception("Database error while deleting task")
+        raise
 
-    except pymysql.err.IntegrityError:
-        logger.error("Failed to insert task %s", task["item"])
-        raise ValueError("Could not add task due to a database constraint")
+    except Exception:
+        connection.rollback()
+        logger.exception("Failed to delete task %s", task["item"])
+        raise
 
     finally:
         connection.close()

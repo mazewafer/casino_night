@@ -45,7 +45,8 @@ the project, so they add to 45 and you can check them directly against the outli
 Inside the 30, expect the weight to fall roughly like this: **source code and build 12**,
 **tests and test report 10**, **documentation 4**, and **progress and git hygiene 4** —
 commits, issues, boards, role rotation. That is guidance on where to spend your effort, not a
-second rubric; the marking rubric issued later in the term is what a TA will actually use.
+rubric. Tutors mark against these weights using written marking guidance, applied the same way
+to every team.
 
 Two things to notice. The charter and backlogs are worth 5 points, not because they do not
 matter — they set up everything else — but because they are cheap to produce well and the
@@ -54,7 +55,7 @@ marks are in the software. And the review sessions are marked **per member**, so
 
 Note what is **not** on this list, deliberately: there is no separate user manual (put setup
 and usage in your README), no presentation deck (the live review is the presentation), and
-no per-sprint retrospective document (one issue comment per sprint is enough). The time
+no retrospective document (a short issue per sprint is enough; see Working rules). The time
 that would have gone into those should go into working software.
 
 ### A note on the sprint review mark
@@ -64,13 +65,44 @@ cannot is a team with a problem, and the marks will say so.
 
 ## Working rules
 
-**Role rotation.** For each substantial piece of work: one member implements, a *different*
-member writes the tests, a *third* reviews the merge request. This is checked mechanically
-against GitLab metadata across the whole project, not just the warm-up.
+**Work rotation (implement, test, review).** For each substantial piece of work: one member
+implements, a *different* member writes the tests, a *third* reviews the merge request. This is
+checked mechanically against GitLab metadata across the whole project, not just the warm-up.
 
-**Labels.** Every issue carries type::, priority::, severity::, and once sprints begin,
-sprint::. The board is expected to be *live* — reflecting what is actually happening, not
+**Scrum roles.** Each sprint, one member is **product owner** (orders the backlog, speaks for the
+user, accepts or rejects finished work) and a different member is **Scrum master** (runs sprint
+planning and the retrospective, chases whatever is blocking the team). Pass both roles on at the
+start of each sprint, so that over the four sprints **every member holds one of them at least
+once**. Nobody holds both in the same sprint. The product owner and Scrum master are still
+developers: they implement, test and review like everyone else. Record each sprint's holders in
+the charter's *Team and roles* table, and update it when the roles change.
+
+Four sprints and two roles make eight slots, so a team of five or six has room for everyone. One
+rotation that works, for members A to E:
+
+| Sprint | Product owner | Scrum master |
+|---|---|---|
+| 1 | A | B |
+| 2 | C | D |
+| 3 | E | A |
+| 4 | B | C |
+
+Everyone holds a role at least once, and A, B and C hold one of each. A team of six covers
+everyone in the first three sprints (A/B, C/D, E/F) and chooses freely for the fourth.
+
+**Labels.** Every issue carries type::, priority::, severity::. Once sprints begin, the issues
+the team takes into a sprint also carry sprint::N and an **estimate**, points::1, 2, 3, 5 or 8,
+agreed by the team at sprint planning (lecture module 07). An issue bigger than 8 points is too
+big: split it. Velocity in the retrospective is the sum of the points on issues finished in the
+sprint. The board is expected to be *live* — reflecting what is actually happening, not
 reconstructed the night before a review.
+
+**Retrospectives.** At the end of each sprint, open an issue titled "Sprint N retrospective",
+labelled sprint::N (it needs no other labels), and write five short lines in it: what went
+well; what did not; the one thing you will change next sprint; velocity (points planned,
+points done); and whether last sprint's change actually happened. Write it the day of the
+review, not later, then close the issue. Three honest sentences beat a page of process
+language.
 
 **AI use is disclosed in each merge request**, exactly as in Lab 5: the description says who
 did what, plus one line on generative-AI use from each member who worked on it --- what for, what
@@ -102,8 +134,8 @@ the thing that does not work would have worked.
 
 ## Getting help
 
-The clinic in the Friday seminar slot exists for this. So do the TAs. A team that is stuck
-and says nothing until December is the one failure mode we cannot help with.
+Ask in the Thursday lab slot, where the tutors are on the floor, or on Piazza. A team that is
+stuck and says nothing until December is the one failure mode we cannot help with.
 
 ## Deadlines
 
