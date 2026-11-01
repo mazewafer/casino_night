@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Team 18 To-Do</title>
+</head>
+<body>
+  <h1>Team 18 To-Do</h1>
+
+  {% for message in get_flashed_messages() %}
+    <p><strong>{{ message }}</strong></p>
+  {% endfor %}
+
+  {% macro task_row(t) %}
+    <li>
+      {{ t.item }}: {{ t.title }} (start {{ t.start }}, due {{ t.due }})
+      <form action="{{ url_for('done_route') }}" method="post">
+        <input type="hidden" name="item" value="{{ t.item }}">
+        <input type="hidden" name="title" value="{{ t.title }}">
+        <input type="hidden" name="start" value="{{ t.start }}">
+        <input type="hidden" name="due" value="{{ t.due }}">
+        <button>Mark done</button>
+      </form>
+    </li>
+  {% endmacro %}
+
+  <h2>Next task</h2>
+  {% if next_task %}
+    <ul>{{ task_row(next_task) }}</ul>
+  {% else %}
+    <p>Nothing pending.</p>
+  {% endif %}
+
+  <h2>Due today</h2>
+  {% if today_tasks %}
+    <ul>{% for t in today_tasks %}{{ task_row(t) }}{% endfor %}</ul>
+  {% else %}
+    <p>Nothing due today.</p>
+  {% endif %}
+
+  <h2>Due tomorrow</h2>
+  {% if tomorrow_tasks %}
+    <ul>{% for t in tomorrow_tasks %}{{ task_row(t) }}{% endfor %}</ul>
+  {% else %}
+    <p>Nothing due tomorrow.</p>
+  {% endif %}
+
+  <h2>Add a task</h2>
+  <form action="{{ url_for('add_route') }}" method="post">
+    Item <input name="item" required>
+    Title <input name="title" required>
+    Start <input type="date" name="start" required>
+    Due <input type="date" name="due" required>
+    <button>Add</button>
+  </form>
+
+  <h2>Update a task</h2>
+  <form action="{{ url_for('update_route') }}" method="post">
+    Item <input name="item" required>
+    Title <input name="title" required>
+    Start <input type="date" name="start" required>
+    Due <input type="date" name="due" required>
+    Completed <input type="date" name="complete"> (leave blank if unfinished)
+    <button>Update</button>
+  </form>
+
+  <h2>Delete a task</h2>
+  <form action="{{ url_for('delete_route') }}" method="post">
+    Item <input name="item" required>
+    <button>Delete</button>
+  </form>
+</body>
+</html>
