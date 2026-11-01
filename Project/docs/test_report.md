@@ -1,4 +1,4 @@
-# Test Report — Team <NN>
+# Test Report — Team [NN]
 
 ## Summary
 *Is this software fit to release? Answer in the first two sentences, then justify it.*
@@ -28,3 +28,7 @@ seconds. List them.*
 pointless duplication.*
 
 ## Recommendation
+*What should happen next, given the results above. If you would release: what known risks are you
+accepting, and why are they acceptable? If you would not: what must be fixed first (the issue
+numbers), and what would you test again before deciding? Three to five sentences, consistent with
+your Summary.*
