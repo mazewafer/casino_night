@@ -61,6 +61,35 @@ def connect():
         logger.exception("Database connection failed")
         raise
 
+def earliest_pending(tasks):
+    """Pick the unfinished task due soonest. No database in here.
+ 
+    Takes a list of (item, title, start, due, complete) tuples. Returns None if
+    nothing is pending. Ties on due are broken by the task that was started
+    first, then by item, so the answer is the same every time.
+    """
+    logger.debug("earliest_pending called with %d tasks", len(tasks))
+    pending = [t for t in tasks if t["complete"] is None or t["complete"] == ""]
+    if not pending:
+        logger.debug("No pending tasks found")
+        return None
+    earliest = min(pending, key=lambda t: (t["due"], t["item"], t["start"]))
+    logger.debug("Earliest pending task is %s", earliest["item"])
+    return earliest
+
+def next():
+    """Fetch every task from the database and hand them to earliest_pending."""
+    logger.debug("next called")
+    connection = connect()
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT item, title, start, due, complete FROM ToDoData")
+            rows = cursor.fetchall()
+    finally:
+        connection.close()
+    return earliest_pending(rows)
+        
+
 
 def add(task: dict) -> None:
     logger.debug("add called with task %s", task)
