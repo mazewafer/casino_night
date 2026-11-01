@@ -71,7 +71,7 @@ def tomorrow(today=None):
     """Return the unfinished tasks due tomorrow, read from the database."""
     conn = connect()
     try:
-        cursor = conn.cursor(dictionary=True)
+        cursor = conn.cursor()
         cursor.execute("SELECT item, title, start, due, complete FROM ToDoData")
         rows = cursor.fetchall()
     finally:
