@@ -1,20 +1,12 @@
 import logging
-from datetime import datetime
-from zoneinfo import ZoneInfo
-
+from datetime import date
 from Project.src.todo import connect
 
 logger = logging.getLogger(__name__)
 
 
 def today() -> list[dict]:
-    """Return all unfinished tasks due today."""
-
     logger.debug("today called")
-
-    today_date = datetime.now(
-        ZoneInfo("America/Toronto")
-    ).date()
 
     connection = connect()
 
@@ -28,7 +20,7 @@ def today() -> list[dict]:
                 AND `complete` IS NULL
                 ORDER BY `item` ASC
                 """,
-                (today_date,)
+                (date.today(),)
             )
 
             tasks = cursor.fetchall()
@@ -37,13 +29,13 @@ def today() -> list[dict]:
             logger.warning("No unfinished tasks due today")
             return []
 
+        # Convert dates to strings
         for task in tasks:
             for field in ("start", "due", "complete"):
                 if task[field] is not None:
                     task[field] = task[field].isoformat()
 
-        logger.info("Found %d unfinished tasks due today", len(tasks))
-
+        logger.info("Found %d tasks due today", len(tasks))
         return tasks
 
     finally:
