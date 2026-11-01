@@ -1,4 +1,3 @@
-
 import os
 import pytest
 import logging
@@ -164,24 +163,24 @@ def test_next_returns_earliest_unfinished_task():
     task = {
         "item": "test next MATH",
         "title": "Schoolwork",
-        "start": "2026-09-26",
-        "due": "2026-09-29",
+        "start": date(2026, 9, 26),
+        "due": date(2026, 9, 29),
         "complete": None
     }
 
     earliest_task = {
         "item": "test next Shopping",
         "title": "Personal",
-        "start": "2026-09-27",
-        "due": "2026-09-28",
+        "start": date(2026, 9, 27),
+        "due": date(2026, 9, 28),
         "complete": None
     }
 
     latest_task = {
         "item": "test next CS",
         "title": "Personal",
-        "start": "2026-09-28",
-        "due": "2026-09-30",
+        "start": date(2026, 9, 28),
+        "due": date(2026, 9, 30),
         "complete": None
     }
 
@@ -219,16 +218,16 @@ def test_next_ignores_finished_tasks():
     finished_task = {
         "item": "test next finished",
         "title": "Personal",
-        "start": "2026-09-27",
-        "due": "2026-09-28",
-        "complete": "2026-09-28"
+        "start": date(2026, 9, 27),
+        "due": date(2026, 9, 28),
+        "complete": date(2026, 9, 28)
     }
 
     unfinished_task = {
         "item": "test next unfinished",
         "title": "Personal",
-        "start": "2026-09-29",
-        "due": "2026-09-30",
+        "start": date(2026, 9, 29),
+        "due": date(2026, 9, 30),
         "complete": None
     }
 
@@ -264,7 +263,6 @@ def test_next_returns_none_when_no_tasks():
     connection = connect()
 
     try:
-        # This test requires an empty dedicated test database.
         with connection.cursor() as cursor:
             cursor.execute("DELETE FROM ToDoData")
         connection.commit()
@@ -280,9 +278,9 @@ def test_next_returns_none_when_only_finished_tasks():
     finished_task = {
         "item": "test next only finished",
         "title": "Personal",
-        "start": "2026-09-27",
-        "due": "2026-09-28",
-        "complete": "2026-09-28"
+        "start": date(2026, 9, 27),
+        "due": date(2026, 9, 28),
+        "complete": date(2026, 9, 28)
     }
 
     connection = connect()
@@ -314,24 +312,24 @@ def test_next_breaks_due_date_tie_alphabetically():
     second_alphabetically = {
         "item": "test next MATH Assignment",
         "title": "Personal",
-        "start": "2026-09-29",
-        "due": "2026-09-30",
+        "start": date(2026, 9, 29),
+        "due": date(2026, 9, 30),
         "complete": None
     }
 
     first_alphabetically = {
         "item": "test next CS Assignment",
         "title": "Schoolwork",
-        "start": "2026-09-26",
-        "due": "2026-09-30",
+        "start": date(2026, 9, 26),
+        "due": date(2026, 9, 30),
         "complete": None
     }
 
     third_alphabetically = {
         "item": "test next Zebra drawing",
         "title": "Personal",
-        "start": "2026-09-29",
-        "due": "2026-09-30",
+        "start": date(2026, 9, 29),
+        "due": date(2026, 9, 30),
         "complete": None
     }
 
@@ -376,24 +374,24 @@ def test_next_logs_debug_info(caplog):
     task = {
         "item": "test next MATH log",
         "title": "Schoolwork",
-        "start": "2026-09-26",
-        "due": "2026-09-29",
+        "start": date(2026, 9, 26),
+        "due": date(2026, 9, 29),
         "complete": None
     }
 
     earliest_task = {
         "item": "test next Shopping log",
         "title": "Personal",
-        "start": "2026-09-27",
-        "due": "2026-09-28",
+        "start": date(2026, 9, 27),
+        "due": date(2026, 9, 28),
         "complete": None
     }
 
     latest_task = {
         "item": "test next CS log",
         "title": "Personal",
-        "start": "2026-09-28",
-        "due": "2026-09-30",
+        "start": date(2026, 9, 28),
+        "due": date(2026, 9, 30),
         "complete": None
     }
 
@@ -432,16 +430,16 @@ def test_next_logs_ignore_finished_info(caplog):
     finished_task = {
         "item": "test next finished log",
         "title": "Personal",
-        "start": "2026-09-27",
-        "due": "2026-09-28",
-        "complete": "2026-09-28"
+        "start": date(2026, 9, 27),
+        "due": date(2026, 9, 28),
+        "complete": date(2026, 9, 28)
     }
 
     unfinished_task = {
         "item": "test next unfinished log",
         "title": "Personal",
-        "start": "2026-09-29",
-        "due": "2026-09-30",
+        "start": date(2026, 9, 29),
+        "due": date(2026, 9, 30),
         "complete": None
     }
 
@@ -478,7 +476,6 @@ def test_next_logs_no_tasks_info(caplog):
     connection = connect()
 
     try:
-        # This test requires an empty dedicated test database.
         with connection.cursor() as cursor:
             cursor.execute("DELETE FROM ToDoData")
         connection.commit()
@@ -497,9 +494,9 @@ def test_next_logs_only_finished_tasks_info(caplog):
     finished_task = {
         "item": "test next only finished log",
         "title": "Personal",
-        "start": "2026-09-27",
-        "due": "2026-09-28",
-        "complete": "2026-09-28"
+        "start": date(2026, 9, 27),
+        "due": date(2026, 9, 28),
+        "complete": date(2026, 9, 28)
     }
 
     connection = connect()
@@ -534,24 +531,24 @@ def test_next_logs_breaks_tie_alphabetically_info(caplog):
     second_alphabetically = {
         "item": "test next MATH tie log",
         "title": "Personal",
-        "start": "2026-09-29",
-        "due": "2026-09-30",
+        "start": date(2026, 9, 29),
+        "due": date(2026, 9, 30),
         "complete": None
     }
 
     first_alphabetically = {
         "item": "test next CS tie log",
         "title": "Schoolwork",
-        "start": "2026-09-26",
-        "due": "2026-09-30",
+        "start": date(2026, 9, 26),
+        "due": date(2026, 9, 30),
         "complete": None
     }
 
     third_alphabetically = {
         "item": "test next Zebra tie log",
         "title": "Personal",
-        "start": "2026-09-29",
-        "due": "2026-09-30",
+        "start": date(2026, 9, 29),
+        "due": date(2026, 9, 30),
         "complete": None
     }
 
