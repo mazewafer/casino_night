@@ -1,7 +1,7 @@
-# Requirements — Team <NN>
+# Requirements — Team [NN]
 
 ## User stories
-*As a <role>, I want <capability> so that <benefit>. The "so that" is what lets you judge
+*As a [role], I want [capability] so that [benefit]. The "so that" is what lets you judge
 later whether a proposed change actually serves the purpose.*
 
 ## Domain model

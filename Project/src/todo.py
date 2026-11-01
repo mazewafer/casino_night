@@ -2,8 +2,11 @@ import os
 import sys
 import pymysql
 import logging
+from datetime import datetime, timedealta
+
 
 logger = logging.getLogger(__name__)
+
 
 def connect():
     """Open a connection using credentials from the environment."""
