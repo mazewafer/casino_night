@@ -60,6 +60,9 @@ def connect():
 def add(task: dict) -> None:
     logger.debug("add called with task %s", task)
 
+    if not task["title"].strip():
+        raise ValueError("title cannot be empty")
+
     connection = connect()
 
     try:
