@@ -2,7 +2,10 @@ import os
 import sys
 import pymysql
 import logging
-from datetime import datetime, timedelta
+
+
+from datetime import date, timedelta
+
 
 
 logger = logging.getLogger(__name__)
@@ -58,6 +61,128 @@ def connect():
         logger.exception("Database connection failed")
         raise
 
+def earliest_pending(tasks):
+    """Pick the unfinished task due soonest. No database in here.
+ 
+    Takes a list of (item, title, start, due, complete) tuples. Returns None if
+    nothing is pending. Ties on due are broken by the task that was started
+    first, then by item, so the answer is the same every time.
+    """
+    logger.debug("earliest_pending called with %d tasks", len(tasks))
+    pending = [t for t in tasks if t["complete"] is None or t["complete"] == ""]
+    if not pending:
+        logger.debug("No pending tasks found")
+        return None
+    earliest = min(pending, key=lambda t: (t["due"], t["item"], t["start"]))
+    logger.debug("Earliest pending task is %s", earliest["item"])
+    return earliest
+
+def next():
+    """Fetch every task from the database and hand them to earliest_pending."""
+    logger.debug("next called")
+    connection = connect()
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT item, title, start, due, complete FROM ToDoData")
+            rows = cursor.fetchall()
+    finally:
+        connection.close()
+    return earliest_pending(rows)
+        
+
+
+def add(task: dict) -> None:
+    logger.debug("add called with task %s", task)
+
+    if not task["title"].strip():
+        raise ValueError("title cannot be empty")
+
+    connection = connect()
+
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                INSERT INTO ToDoData
+                (`item`, `title`, `start`, `due`, `complete`)
+                VALUES (%s, %s, %s, %s, %s)
+                """,
+                (
+                    task["item"],
+                    task["title"],
+                    task["start"],
+                    task["due"],
+                    task["complete"]
+                )
+            )
+
+        connection.commit()
+        logger.info("task %s added successfully", task["item"])
+
+    except pymysql.err.IntegrityError:
+        logger.error("Failed to insert task %s", task["item"])
+        raise ValueError("Could not add task due to a database constraint")
+
+    finally:
+        connection.close()
+        logger.debug("database connection closed")
+
+def update(task: dict) -> None:
+        logger.debug("update called with item=%s", task["item"])
+        connection = connect()
+        try:
+                with connection.cursor() as cursor:
+                        cursor.execute("SELECT item FROM ToDoData WHERE item = %s", (task["item"],))
+                        if cursor.fetchone() is None:
+                                logger.warning("Attempted to update non-existent task: %s", task["item"])
+                                raise ValueError("Item doesn't exist")
+                        cursor.execute("UPDATE ToDoData SET title = %s, start = %s, due = %s, complete = %s WHERE item = %s", (task["title"], task["start"], task["due"], task["complete"], task["item"]))
+                connection.commit()
+                logger.info("Updated task: %s", task["item"])
+        except Exception:
+                connection.rollback()
+                raise
+        finally:
+                connection.close()
+                logger.debug("database connection closed")
+
+def today() -> list[dict]:
+    logger.debug("today called")
+
+    connection = connect()
+
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT *
+                FROM ToDoData
+                WHERE `due` = %s
+                AND `complete` IS NULL
+                ORDER BY `item` ASC
+                """,
+                (date.today(),)
+            )
+
+            tasks = cursor.fetchall()
+
+        if not tasks:
+            logger.warning("No unfinished tasks due today")
+            return []
+
+        # Convert dates to strings
+        for task in tasks:
+            for field in ("start", "due", "complete"):
+                if task[field] is not None:
+                    task[field] = task[field].isoformat()
+
+        logger.info("Found %d tasks due today", len(tasks))
+        return tasks
+
+    finally:
+        connection.close()
+        logger.debug("database connection closed")
+
 
 def delete(task: dict) -> None:
     logger.debug("delete called with task %s", task)
@@ -86,3 +211,21 @@ def delete(task: dict) -> None:
     finally:
         connection.close()
         logger.debug("database connection closed")
+        
+def pick_tomorrow(tasks, today=None):
+    """Return the unfinished tasks in `tasks` that are due tomorrow."""
+    if today is None:
+        today = date.today()
+    tomorrow_date = today + timedelta(days=1)
+    return [t for t in tasks if t["complete"] is None and t["due"] == tomorrow_date]
+
+def tomorrow(today=None):
+    """Return the unfinished tasks due tomorrow, read from the database."""
+    conn = connect()
+    try:
+        cursor = conn.cursor()
+        cursor.execute("SELECT item, title, start, due, complete FROM ToDoData")
+        rows = cursor.fetchall()
+    finally:
+        conn.close()
+    return pick_tomorrow(rows, today)
