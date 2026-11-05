@@ -1,64 +1,87 @@
-# Project Charter — Team [NN]
-
-*Replace every prompt in square brackets, including the team number. Delete the italic guidance as you go. One page is
-the target; two is the maximum. A charter that takes longer to read than to act on has
-failed at its job.*
+# Project Charter — Team [18]
 
 ## Project title
-[A name. It can be dull.]
+Casino Night
 
 ## Description
-*Two or three sentences. What is this, and who is it for? If a stranger read only this
-paragraph, could they tell what you are building?*
+A Python web application backed by a MySQL database where registered 
+players log in, hold a virtual currency balance, and bet it on simple 
+games. Players can see a leaderboard ranking everyone by balance. It is for 
+classmates and friends who want a low-stakes game with a bit of competition.
 
 ## Objectives and goals
-*Specific and measurable. "The app will be fast" is not a goal; "a task list of 100 items
-loads in under one second" is. Three to five is plenty.*
-
-1.
-2.
-3.
+1. A new user can register and log in with a username and password. 
+Passwords are stored hashed, and every page except login and register 
+requires a session.
+2. New accounts start with $1000. Each account receives $200 once per 
+calendar day, verified by an automated test that simulates two consecutive 
+days and a repeat claim on the same day.
+3. All games are playable end to end with betting. A balance never 
+goes below $0, and every bet settlement updates both players’ balances in a 
+single database transaction.
+4. The leaderboard shows the top 5 players and loads in under three seconds 
+with 50 players in the database.
+5. Multiplayer bets are matched correctly. Two players whose bets differ by 
+more than $100 are rejected, and otherwise the wager is the average of the 
+two.
 
 ## Scope
 
 **In scope**
-*What you are committing to build.*
+- Registration, login, logout
+- Balance, starting grant, and daily bonus
+- Rock paper scissors (multiplayer/singleplayer), slots (singleplayer) 
+and blackjack (singleplayer)
+- Betting and settlement
+- Leaderboard
+- MySQL schema hosted on Aiven
 
 **Out of scope**
-*What you are explicitly not building. This section is the useful half. Writing it down now
-is what lets you say no in week three without renegotiating.*
+- Real money, payments, or anything resembling actual gambling
+- Password reset by email, social login, profile pictures
+- Chat, friends lists, spectating
+- Admin dashboard
 
 ## Definition of done
-*What has to be true before your team calls a piece of work finished. Be concrete enough
-that two members would agree in a disputed case. A reasonable starting point: merged, tests
-passing, reviewed and approved by someone who did not write it.*
+- It is merged to main through a merge request.
+- Its tests, which are written by someone not writing the code, pass.
+- Someone who did not write it has reviewed and approved it.
+- Any money-handling code has a test covering the edge cases: insufficient 
+funds, a tie, and a bet mismatch.
+- The application is tested on at least two people’s laptop.
 
 ## Team and roles
-| Member | GitLab userid | Role this sprint |
-|---|---|---|
-| | | |
-
-*Product owner speaks for the user, Scrum master speaks for the process, and everyone --- the
-two of them included --- is a developer. Pass both roles on at the start of each sprint, so that
-everyone holds one of them at least once (see Working rules in `Project/README.md`). Update this
-table when the roles change, and note the sprint.*
+| Member | GitLab userid | Role this sprint (1) |
+| Cedric | @z2964wan1 | developer |
+| Daniel | @dadoga1 | developer |
+| Fei | @f252zhan1 | developer |
+| Kelly | @k26du1 | Scrum master |
+| Isaac | @i9lu1 | Product owner |
 
 ## Assumptions
-*What you are taking for granted. "At least one member has a working Android device";
-"the free Aiven tier is sufficient"; "we can meet outside the lab slot on Tuesdays".
-Assumptions are the things that hurt when they turn out false, so write them down while
-they still feel too obvious to mention.*
+- Everyone can run Python and MySQL locally, or connect to a shared hosted 
+database.
+- A free-tier hosted MySQL is enough for our data volume.
+- We use one Python web framework, Flask.
+- “Midnight” means one fixed timezone, EST, not each player’s 
+local time.
+- The multiplayer games need two players online at the same time.
+- We can call outside the lab slot at least once a week.
 
 ## Constraints
-*Time, skills, tooling, the 0.25-unit workload. Be realistic here rather than brave.*
+- Fixed term deadlines.
+- Five developers with mixed experience in web and database work.
+- Free-tier hosting and no budget.
+- Have to stay within scope and not do anything out of scope. 
 
 ## Risks
 | Risk | How likely | How bad | What we will do about it |
-|---|---|---|---|
-| | | | |
-
-*Three to five real ones. "A team member might get sick" is real. "The project might fail"
-is not a risk, it is an outcome.*
+| Scope too large (three games, multiplayer, and betting) | Likely | Severe | Reduce: plan for about half. Slots and single-player RPS come first; multiplayer and the third game are stretch goals. The out-of-scope list lets us say no. |
+| Integration left to the end (login, database, betting, and games built separately) | Likely | Severe | Reduce: build an end-to-end skeleton in sprint 1 (register, log in, see balance, place one bet) on the shared deployed site. |
+| A member disengages | Possible | Severe | Reduce: keep the board live, flag problems early at standups, and never let one person own a critical module alone. |
+| Team database unavailable (free tier down or credentials lost) | Possible | Moderate | Reduce: keep the schema and seed script in the repository so anyone can recreate the database locally. |
+| Multiplayer sync is harder than expected (matching players, hiding choices until both submit, handling a player who leaves) | Likely | Moderate | Reduce: build single-player first; keep multiplayer to simple turn submission by polling, with a timeout that forfeits the bet. |
 
 ## Sign-off
-*Every member confirms they have read this and agree to it. Names and date.*
+We have read this charter and agree to it.
+Isaac Lu, Daniel Adoga, Kelly Du, Fei Zhang, Cedric Wang Date: 2026-11-05
